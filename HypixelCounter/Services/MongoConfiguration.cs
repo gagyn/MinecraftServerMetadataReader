@@ -2,6 +2,6 @@
 {
     public class MongoConfiguration
     {
-        public string MongoConnectionString { get; private set; }
+        public string MongoConnectionString { get; set; }
     }
 }

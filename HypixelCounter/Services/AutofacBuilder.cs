@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Autofac;
+using HypixelCounter.Integrations;
 using MongoDB.Driver;
 
 namespace HypixelCounter.Services
@@ -37,10 +38,11 @@ namespace HypixelCounter.Services
 
         private void RegisterMongoDatabase(MongoConfiguration configuration)
         {
-            var database = new MongoClient(configuration.MongoConnectionString);
-            _builder.RegisterInstance(database)
-                .As<IMongoDatabase>()
-                .InstancePerLifetimeScope();
+            var database = new MongoClient(configuration.MongoConnectionString).GetDatabase("hypixelCounter");
+            var sessionFactory = new SessionFactory(database);
+            _builder.RegisterInstance(sessionFactory)
+                .SingleInstance()
+                .As<SessionFactory>();
         }
 
         private void RegisterServices(Assembly assembly)
