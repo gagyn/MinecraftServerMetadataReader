@@ -2,7 +2,7 @@
 using Autofac;
 using HypixelCounter.Services;
 
-namespace HypixelCounterServer
+namespace HypixelCounterServer.Service
 {
     public class AutofacServerBuilder
     {
@@ -13,9 +13,9 @@ namespace HypixelCounterServer
             this._builder = new AutofacBuilder();
         }
 
-        public IContainer Build(MongoConfiguration mongoConfiguration)
+        public IContainer Build(AppConfiguration appConfiguration)
         {
-            _builder.BuildCounterServices(mongoConfiguration);
+            _builder.BuildCounterServices(appConfiguration);
             var thisAssembly = Assembly.GetExecutingAssembly();
             _builder.BuildAdditionalControllers(thisAssembly);
             _builder.BuildAdditionalServices(thisAssembly);

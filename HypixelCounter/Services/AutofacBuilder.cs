@@ -14,8 +14,9 @@ namespace HypixelCounter.Services
             this._builder = new ContainerBuilder();
         }
 
-        public void BuildCounterServices(MongoConfiguration configuration)
+        public void BuildCounterServices(AppConfiguration configuration)
         {
+            RegisterAppConfiguration(configuration);
             RegisterMongoDatabase(configuration);
             RegisterServices(Assembly.GetExecutingAssembly());
             RegisterControllers(Assembly.GetExecutingAssembly());
@@ -35,8 +36,14 @@ namespace HypixelCounter.Services
         {
             return _builder.Build();
         }
+        private void RegisterAppConfiguration(AppConfiguration configuration)
+        {
+            _builder.RegisterInstance(configuration)
+                .SingleInstance()
+                .As<AppConfiguration>();
+        }
 
-        private void RegisterMongoDatabase(MongoConfiguration configuration)
+        private void RegisterMongoDatabase(AppConfiguration configuration)
         {
             var database = new MongoClient(configuration.MongoConnectionString).GetDatabase("hypixelCounter");
             var sessionFactory = new SessionFactory(database);

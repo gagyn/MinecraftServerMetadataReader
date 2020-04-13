@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Autofac;
 using HypixelCounter;
 using HypixelCounter.Services;
+using HypixelCounterServer.Service;
 using Newtonsoft.Json;
 
 namespace HypixelCounterServer
@@ -13,7 +14,7 @@ namespace HypixelCounterServer
         static async Task Main(string[] args)
         {
             const string configPath = "config.json";
-            var configuration = JsonConvert.DeserializeObject<MongoConfiguration>(File.ReadAllText(configPath));
+            var configuration = JsonConvert.DeserializeObject<AppConfiguration>(File.ReadAllText(configPath));
             var container = new AutofacServerBuilder().Build(configuration);
 
             var controller = container.Resolve<StatisticsCounterController>();
