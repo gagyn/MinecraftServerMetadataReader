@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Net;
 using System.Text.RegularExpressions;
 
@@ -22,8 +23,17 @@ namespace HypixelCounter.Services
 
         public (int onlinePlayers, int slots) GetRealCount()
         {
-            var pingPayLoad = ServerPing.GetPingPayloadAsync(_HYPIXEL_IP).Result;
-            return (pingPayLoad.Players.Online, pingPayLoad.Players.Max);
+            try
+            {
+                var serverPing = new ServerPing();
+                var pingPayLoad = serverPing.GetPingPayloadAsync(_HYPIXEL_IP).Result;
+                return (pingPayLoad.Players.Online, pingPayLoad.Players.Max);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + "\n" + e.StackTrace);
+                return (0, 0);
+            }
         }
 
         private static string GetNumberFromPage()

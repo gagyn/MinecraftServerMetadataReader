@@ -20,7 +20,7 @@ namespace HypixelCounter
 
         public async Task Run()
         {
-            const int sleepTime = 1000 * 60 * 15;
+            const int sleepTime = 1000 * 60 * 30;
             while (true)
             {
                 var count = _serverPlayersCounterService.GetCount();

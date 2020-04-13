@@ -10,37 +10,11 @@ namespace HypixelCounter.Services
 {
     public class ServerPing
     {
-        private static readonly Dictionary<char, ConsoleColor> _colors = new Dictionary<char, ConsoleColor>
-        {
-             { '0', ConsoleColor.Black       },
-             { '1', ConsoleColor.DarkBlue    },
-             { '2', ConsoleColor.DarkGreen   },
-             { '3', ConsoleColor.DarkCyan    },
-             { '4', ConsoleColor.DarkRed     },
-             { '5', ConsoleColor.DarkMagenta },
-             { '6', ConsoleColor.Yellow      },
-             { '7', ConsoleColor.Gray        },
-             { '8', ConsoleColor.DarkGray    },
-             { '9', ConsoleColor.Blue        },
-             { 'a', ConsoleColor.Green       },
-             { 'b', ConsoleColor.Cyan        },
-             { 'c', ConsoleColor.Red         },
-             { 'd', ConsoleColor.Magenta     },
-             { 'e', ConsoleColor.Yellow      },
-             { 'f', ConsoleColor.White       },
-             { 'k', Console.ForegroundColor  },
-             { 'l', Console.ForegroundColor  },
-             { 'm', Console.ForegroundColor  },
-             { 'n', Console.ForegroundColor  },
-             { 'o', Console.ForegroundColor  },
-             { 'r', ConsoleColor.White       }
-        };
+        private NetworkStream _stream;
+        private List<byte> _buffer;
+        private int _offset;
 
-        private static NetworkStream _stream;
-        private static List<byte> _buffer;
-        private static int _offset;
-
-        public static async Task<PingPayload> GetPingPayloadAsync(string serverIpAddress)
+        public async Task<PingPayload> GetPingPayloadAsync(string serverIpAddress)
         {
             var client = new TcpClient();
             await client.ConnectAsync(serverIpAddress, 25565);
@@ -108,14 +82,14 @@ namespace HypixelCounter.Services
         }
 
         #region Read/Write methods
-        internal static byte ReadByte(byte[] buffer)
+        internal byte ReadByte(byte[] buffer)
         {
             var b = buffer[_offset];
             _offset += 1;
             return b;
         }
 
-        internal static byte[] Read(byte[] buffer, int length)
+        internal byte[] Read(byte[] buffer, int length)
         {
             var data = new byte[length];
             Array.Copy(buffer, _offset, data, 0, length);
@@ -123,7 +97,7 @@ namespace HypixelCounter.Services
             return data;
         }
 
-        internal static int ReadVarInt(byte[] buffer)
+        internal int ReadVarInt(byte[] buffer)
         {
             var value = 0;
             var size = 0;
@@ -139,13 +113,13 @@ namespace HypixelCounter.Services
             return value | ((b & 0x7F) << (size * 7));
         }
 
-        internal static string ReadString(byte[] buffer, int length)
+        internal string ReadString(byte[] buffer, int length)
         {
             var data = Read(buffer, length);
             return Encoding.UTF8.GetString(data);
         }
 
-        internal static void WriteVarInt(int value)
+        private void WriteVarInt(int value)
         {
             while ((value & 128) != 0)
             {
@@ -155,24 +129,24 @@ namespace HypixelCounter.Services
             _buffer.Add((byte)value);
         }
 
-        internal static void WriteShort(short value)
+        internal void WriteShort(short value)
         {
             _buffer.AddRange(BitConverter.GetBytes(value));
         }
 
-        internal static void WriteString(string data)
+        internal void WriteString(string data)
         {
             var buffer = Encoding.UTF8.GetBytes(data);
             WriteVarInt(buffer.Length);
             _buffer.AddRange(buffer);
         }
 
-        internal static void Write(byte b)
+        internal void Write(byte b)
         {
             _stream.WriteByte(b);
         }
 
-        internal static void Flush(int id = -1)
+        internal void Flush(int id = -1)
         {
             var buffer = _buffer.ToArray();
             _buffer.Clear();
