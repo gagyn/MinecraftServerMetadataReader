@@ -17,6 +17,11 @@ namespace HypixelCounter.Services
             return success ? parsedPlayersCount : -1;
         }
 
+        public int GetNumberOfSlots()
+        {
+            return 0;
+        }
+
         private static string GetNumberFromPage()
         {
             const string hypixelUrl = "https://hypixel.net/";

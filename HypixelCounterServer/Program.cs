@@ -13,6 +13,8 @@ namespace HypixelCounterServer
     {
         static async Task Main(string[] args)
         {
+            await HypixelCounter.Services.ServerPing.Main(args);
+            return;
             const string configPath = "config.json";
             var configuration = JsonConvert.DeserializeObject<AppConfiguration>(File.ReadAllText(configPath));
             var container = new AutofacServerBuilder().Build(configuration);
