@@ -24,10 +24,11 @@ namespace HypixelCounter
             while (true)
             {
                 var count = _serverPlayersCounterService.GetCount();
+                var (onlinePlayers, slots) = _serverPlayersCounterService.GetRealCount();
                 if (count != -1)
                 {
-                    await _statusWriterToBaseService.WriteToBase(count);
-                    await _notificationService.SendMail(count);
+                    await _statusWriterToBaseService.WriteToBase(count, onlinePlayers, slots);
+                    await _notificationService.SendMail(count, onlinePlayers, slots);
                 }
 
                 Console.WriteLine($"{DateTime.Now}: {count}");

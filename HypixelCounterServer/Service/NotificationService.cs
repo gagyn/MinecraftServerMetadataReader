@@ -14,14 +14,21 @@ namespace HypixelCounterServer.Service
             _appConfiguration = appConfiguration;
         }
 
-        public async Task SendMail(int count)
+        public async Task SendMail(int playingInServer, int connectedToServerIncludingQueue, int maxSlots)
         {
+            var inQueue = connectedToServerIncludingQueue - playingInServer;
+
             var from = new MailAddress(_appConfiguration.FromMailAddress);
             var to = new MailAddress(_appConfiguration.ToMailAddress);
+            var parsedBody = _appConfiguration.DefaultMessageText
+                .Replace("{{playingInServer}}", playingInServer.ToString())
+                .Replace("{{inQueueCount}}", inQueue.ToString())
+                .Replace("{{maxSlots}}", maxSlots.ToString());
+
             var mail = new MailMessage(from, to)
             {
                 Subject = _appConfiguration.DefaultMessageSubject,
-                Body = _appConfiguration.DefaultMessageText.Replace("{{count}}", count.ToString())
+                Body = parsedBody
             };
 
             //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;

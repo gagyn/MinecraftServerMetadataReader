@@ -40,34 +40,27 @@ namespace HypixelCounter.Services
         private static List<byte> _buffer;
         private static int _offset;
 
-        public static async Task Main(string[] args)
+        public static async Task<PingPayload> GetPingPayloadAsync(string serverIpAddress)
         {
-            Console.Title = "Minecraft Server Ping";
-
             var client = new TcpClient();
-            Console.WriteLine("Connecting to Minecraft server..");
-            await client.ConnectAsync("mc.hypixel.net", 25565);
+            await client.ConnectAsync(serverIpAddress, 25565);
 
             if (!client.Connected)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Unable to connect to the server");
-                Console.ResetColor();
-                Console.ReadKey(true);
-                Environment.Exit(1);
+                return null;
             }
 
             _buffer = new List<byte>();
             _stream = client.GetStream();
             Console.WriteLine("Sending status request");
 
-
             /*
              * Send a "Handshake" packet
              * http://wiki.vg/Server_List_Ping#Ping_Process
              */
             WriteVarInt(47);
-            WriteString("mc.hypixel.net");
+            WriteString(serverIpAddress);
             WriteShort(25565);
             WriteVarInt(1);
             Flush(0);
@@ -93,20 +86,12 @@ namespace HypixelCounter.Services
                 var length = ReadVarInt(buffer);
                 var packet = ReadVarInt(buffer);
                 var jsonLength = ReadVarInt(buffer);
-#if DEBUG
-                Console.WriteLine("Received packet 0x{0:X2} with a length of {1}", packet, length);
-#endif
                 var json = ReadString(buffer, jsonLength);
                 var lastIndex = json.IndexOf("\0", StringComparison.Ordinal);
                 json = json[..lastIndex] + "\"}"; // I added " bcs it wasn't working without that
                 var ping = JsonConvert.DeserializeObject<PingPayload>(json);
-
-                Console.WriteLine("Software: {0}", ping.Version.Name);
-                Console.WriteLine("Protocol: {0}", ping.Version.Protocol);
-                Console.WriteLine("Players Online: {0}/{1}", ping.Players.Online, ping.Players.Max);
-                WriteMotd(ping);
-
-                Console.ReadKey(true);
+                
+                return ping;
             }
             catch (IOException ex)
             {
@@ -114,43 +99,12 @@ namespace HypixelCounter.Services
                  * If an IOException is thrown then the server didn't 
                  * send us a VarInt or sent us an invalid one.
                  */
-                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Unable to read packet length from server,");
                 Console.WriteLine("are you sure it's a Minecraft server?");
-#if DEBUG
                 Console.WriteLine("Here are the details:");
                 Console.WriteLine(ex.ToString());
-#endif
-                Console.ResetColor();
             }
-        }
-
-        private static void WriteMotd(PingPayload ping)
-        {
-            Console.Write("Motd: ");
-            var chars = ping.Desc.ToCharArray();
-            for (var i = 0; i < ping.Desc.Length; i++)
-            {
-                try
-                {
-                    if (chars[i] == '\u00A7' && _colors.ContainsKey(chars[i + 1]))
-                    {
-                        Console.ForegroundColor = _colors[chars[i + 1]];
-                        continue;
-                    }
-                    if (chars[i - 1] == '\u00A7' && _colors.ContainsKey(chars[i]))
-                    {
-                        continue;
-                    }
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    // End of string
-                }
-                Console.Write(chars[i]);
-            }
-            Console.WriteLine();
-            Console.ResetColor();
+            return null;
         }
 
         #region Read/Write methods
@@ -249,7 +203,7 @@ namespace HypixelCounter.Services
     /// C# represenation of the following JSON file
     /// https://gist.github.com/thinkofdeath/6927216
     /// </summary>
-    class PingPayload
+    public class PingPayload
     {
         /// <summary>
         /// Protocol that the server is using and the given name
@@ -270,13 +224,13 @@ namespace HypixelCounter.Services
         public string Icon { get; set; }
     }
 
-    class DescPayload
+    public class DescPayload
     {
         [JsonProperty(PropertyName = "text")]
         public string Motd { get; set; }
     }
 
-    class VersionPayload
+    public class VersionPayload
     {
         [JsonProperty(PropertyName = "protocol")]
         public int Protocol { get; set; }
@@ -285,7 +239,7 @@ namespace HypixelCounter.Services
         public string Name { get; set; }
     }
 
-    class PlayersPayload
+    public class PlayersPayload
     {
         [JsonProperty(PropertyName = "max")]
         public int Max { get; set; }
@@ -297,7 +251,7 @@ namespace HypixelCounter.Services
         public List<Player> Sample { get; set; }
     }
 
-    class Player
+    public class Player
     {
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }

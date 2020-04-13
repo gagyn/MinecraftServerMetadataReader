@@ -6,6 +6,9 @@ namespace HypixelCounter.Services
 {
     public class ServerPlayersCounterService
     {
+        private const string _HYPIXEL_URL = "https://hypixel.net/";
+        private const string _HYPIXEL_IP = "mc.hypixel.net";
+
         /// <summary>
         /// Gets number of players now on server or -1 if error
         /// </summary>
@@ -17,17 +20,17 @@ namespace HypixelCounter.Services
             return success ? parsedPlayersCount : -1;
         }
 
-        public int GetNumberOfSlots()
+        public (int onlinePlayers, int slots) GetRealCount()
         {
-            return 0;
+            var pingPayLoad = ServerPing.GetPingPayloadAsync(_HYPIXEL_IP).Result;
+            return (pingPayLoad.Players.Online, pingPayLoad.Players.Max);
         }
 
         private static string GetNumberFromPage()
         {
-            const string hypixelUrl = "https://hypixel.net/";
             var client = new WebClient();
             client.Headers.Add("user-agent", "MyCounter/1.0");
-            var content = client.DownloadString(hypixelUrl);
+            var content = client.DownloadString(_HYPIXEL_URL);
             var regex = new Regex("Join <b>(?<playersCount>[\\d,]+)<\\/b>");
             var playersCount = regex.Match(content).Groups["playersCount"].Value;
             return playersCount;
