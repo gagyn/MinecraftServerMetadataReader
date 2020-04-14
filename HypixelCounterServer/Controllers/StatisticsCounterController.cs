@@ -34,7 +34,11 @@ namespace HypixelCounterServer.Controllers
                 }
 
                 await _statusWriterToBaseService.WriteToBase(onlinePlayers, inQueue, slots);
-                await _notificationService.SendMail(onlinePlayers, inQueue, slots);
+
+                if (DateTime.Now.Minute == 0 && DateTime.Now.Hour > 11)
+                {
+                    await _notificationService.SendMail(onlinePlayers, inQueue, slots);
+                }
 
                 Console.WriteLine($"{DateTime.Now}: {onlinePlayers} in queue: {inQueue} slots: {slots}");
             }
