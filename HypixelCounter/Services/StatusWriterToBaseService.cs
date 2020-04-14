@@ -13,13 +13,13 @@ namespace HypixelCounter.Services
             _sessionFactory = sessionFactory;
         }
 
-        public async Task WriteToBase(int playersCount, int onlinePlayers, int slots)
+        public async Task WriteToBase(int onlinePlayers, int inQueue, int slots)
         {
             var session = _sessionFactory.Create();
             var countRecord = new CountRecord
             {
-                PlayersCount = playersCount,
                 OnlinePlayers = onlinePlayers,
+                InQueuePlayers = inQueue,
                 MaxSlots = slots
             };
             await session.AddAsync(countRecord);

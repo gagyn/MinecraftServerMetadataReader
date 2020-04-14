@@ -23,15 +23,17 @@ namespace HypixelCounter
             const int sleepTime = 1000 * 60 * 30;
             while (true)
             {
-                var count = _serverPlayersCounterService.GetCount();
                 var (onlinePlayers, slots) = _serverPlayersCounterService.GetRealCount();
-                if (count != -1)
+                var inQueue = onlinePlayers - slots;
+                if (inQueue < 0)
                 {
-                    await _statusWriterToBaseService.WriteToBase(count, onlinePlayers, slots);
-                    await _notificationService.SendMail(count, onlinePlayers, slots);
+                    inQueue = 0;
                 }
 
-                Console.WriteLine($"{DateTime.Now}: {count}");
+                await _statusWriterToBaseService.WriteToBase(onlinePlayers, inQueue, slots);
+                await _notificationService.SendMail(onlinePlayers, inQueue, slots);
+
+                Console.WriteLine($"{DateTime.Now}: {onlinePlayers} in queue: {inQueue} slots: {slots}");
                 await Task.Delay(sleepTime);
             }
         }

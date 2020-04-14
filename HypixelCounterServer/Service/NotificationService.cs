@@ -14,14 +14,12 @@ namespace HypixelCounterServer.Service
             _appConfiguration = appConfiguration;
         }
 
-        public async Task SendMail(int playingInServer, int connectedToServerIncludingQueue, int maxSlots)
+        public async Task SendMail(int connectedToServerIncludingQueue, int inQueue, int maxSlots)
         {
-            var inQueue = connectedToServerIncludingQueue - playingInServer;
-
             var from = new MailAddress(_appConfiguration.FromMailAddress);
             var to = new MailAddress(_appConfiguration.ToMailAddress);
             var parsedBody = _appConfiguration.DefaultMessageText
-                .Replace("{{playingInServer}}", playingInServer.ToString())
+                .Replace("{{onlinePlayers}}", connectedToServerIncludingQueue.ToString())
                 .Replace("{{inQueueCount}}", inQueue.ToString())
                 .Replace("{{maxSlots}}", maxSlots.ToString());
 
