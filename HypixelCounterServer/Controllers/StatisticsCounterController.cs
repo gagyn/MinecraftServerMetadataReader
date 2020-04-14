@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using HypixelCounter.Services;
+using HypixelCounterServer.Common;
 using HypixelCounterServer.Service;
 
-namespace HypixelCounter
+namespace HypixelCounterServer.Controllers
 {
     public class StatisticsCounterController
     {
@@ -20,9 +21,11 @@ namespace HypixelCounter
 
         public async Task Run()
         {
-            const int sleepTime = 1000 * 60 * 30;
             while (true)
             {
+                var sleepTime = GetSleepTime(Period.Minutes15);
+                await Task.Delay(sleepTime);
+
                 var (onlinePlayers, slots) = _serverPlayersCounterService.GetRealCount();
                 var inQueue = onlinePlayers - slots;
                 if (inQueue < 0)
@@ -34,8 +37,17 @@ namespace HypixelCounter
                 await _notificationService.SendMail(onlinePlayers, inQueue, slots);
 
                 Console.WriteLine($"{DateTime.Now}: {onlinePlayers} in queue: {inQueue} slots: {slots}");
-                await Task.Delay(sleepTime);
             }
+        }
+
+        private TimeSpan GetSleepTime(Period sleepPeriod)
+        {
+            var now = DateTime.Now;
+            var next = now.Date;
+            next = next.AddHours(now.Hour);
+            var howManyPeriodsPassInThisHour = now.Minute / (int) sleepPeriod;
+            next = next.AddMinutes((howManyPeriodsPassInThisHour + 1) * (int) sleepPeriod);
+            return next - now;
         }
     }
 }

@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Autofac;
-using HypixelCounter;
 using HypixelCounter.Services;
+using HypixelCounterServer.Controllers;
 using HypixelCounterServer.Service;
 using Newtonsoft.Json;
 
