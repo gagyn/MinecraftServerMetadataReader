@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Source of this file: https://gist.github.com/csh/2480d14fbbb33b4bbae3
+// This version of ServerPing is modified by me
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using HypixelCounter.Services;
 using HypixelCounterServer.Common;
-using HypixelCounterServer.Service;
 
 namespace HypixelCounterServer.Controllers
 {
@@ -10,13 +9,11 @@ namespace HypixelCounterServer.Controllers
     {
         private readonly StatusWriterToBaseService _statusWriterToBaseService;
         private readonly ServerPlayersCounterService _serverPlayersCounterService;
-        private readonly NotificationService _notificationService;
 
-        public StatisticsCounterController(StatusWriterToBaseService statusWriterToBaseService, ServerPlayersCounterService serverPlayersCounterService, NotificationService notificationService)
+        public StatisticsCounterController(StatusWriterToBaseService statusWriterToBaseService, ServerPlayersCounterService serverPlayersCounterService)
         {
             _statusWriterToBaseService = statusWriterToBaseService;
             _serverPlayersCounterService = serverPlayersCounterService;
-            _notificationService = notificationService;
         }
 
         public async Task Run()
@@ -34,12 +31,6 @@ namespace HypixelCounterServer.Controllers
                 }
 
                 await _statusWriterToBaseService.WriteToBase(onlinePlayers, inQueue, slots);
-
-                if (DateTime.Now.Minute == 0 && DateTime.Now.Hour > 11)
-                {
-                    //await _notificationService.SendMail(onlinePlayers, inQueue, slots);
-                }
-
                 Console.WriteLine($"{DateTime.Now}: {onlinePlayers} in queue: {inQueue} slots: {slots}");
             }
         }

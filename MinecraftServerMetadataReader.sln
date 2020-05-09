@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HypixelCounter", "HypixelCounter\HypixelCounter.csproj", "{7827212C-61DB-4635-A811-9C91718ACDDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinecraftServerStatusDomain", "HypixelCounter\MinecraftServerStatusDomain.csproj", "{7827212C-61DB-4635-A811-9C91718ACDDD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HypixelCounterServer", "HypixelCounterServer\HypixelCounterServer.csproj", "{0F95F48B-17CF-4A79-8B5E-E1421BA64630}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinecraftServerStatusHandler", "HypixelCounterServer\MinecraftServerStatusHandler.csproj", "{0F95F48B-17CF-4A79-8B5E-E1421BA64630}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

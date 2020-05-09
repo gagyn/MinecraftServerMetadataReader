@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HypixelCounter\HypixelCounter.csproj" />
+    <ProjectReference Include="..\HypixelCounter\MinecraftServerStatusDomain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

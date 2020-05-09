@@ -2,7 +2,7 @@
 using Autofac;
 using HypixelCounter.Services;
 
-namespace HypixelCounterServer.Service
+namespace HypixelCounterServer.Services
 {
     public class AutofacServerBuilder
     {

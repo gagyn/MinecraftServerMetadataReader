@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Autofac;
 using HypixelCounter.Services;
 using HypixelCounterServer.Controllers;
-using HypixelCounterServer.Service;
+using HypixelCounterServer.Services;
 using Newtonsoft.Json;
 
 namespace HypixelCounterServer
