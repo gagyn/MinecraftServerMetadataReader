@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MinecraftServerStatus.Controller.Common;
 using MinecraftServerStatus.Domain.Services;
@@ -7,6 +8,9 @@ namespace MinecraftServerStatus.Controller.Controllers
 {
     public class StatisticsCounterController
     {
+        public Period SleepPeriod { get; } = Period.Minutes15;
+
+        private CancellationTokenSource _cancellationToken;
         private readonly StatusWriterToBaseService _statusWriterToBaseService;
         private readonly ServerPlayersCounterService _serverPlayersCounterService;
 
@@ -18,10 +22,11 @@ namespace MinecraftServerStatus.Controller.Controllers
 
         public async Task Run()
         {
-            while (true)
+            _cancellationToken = new CancellationTokenSource();
+            while (!_cancellationToken.IsCancellationRequested)
             {
-                var sleepTime = GetSleepTime(Period.Minutes15);
-                await Task.Delay(sleepTime);
+                var sleepTime = GetSleepTime(SleepPeriod);
+                await Task.Delay(sleepTime, _cancellationToken.Token);
 
                 var (onlinePlayers, slots) = _serverPlayersCounterService.GetRealCount();
                 var inQueue = onlinePlayers - slots;
@@ -33,6 +38,11 @@ namespace MinecraftServerStatus.Controller.Controllers
                 await _statusWriterToBaseService.WriteToBase(onlinePlayers, inQueue, slots);
                 Console.WriteLine($"{DateTime.Now}: {onlinePlayers} in queue: {inQueue} slots: {slots}");
             }
+        }
+
+        public void Stop()
+        {
+            _cancellationToken.Cancel();
         }
 
         private TimeSpan GetSleepTime(Period sleepPeriod)

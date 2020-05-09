@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Autofac;
+using Microsoft.Extensions.Configuration;
 using MinecraftServerStatus.Integrations.MongoDB;
 using MongoDB.Driver;
 
@@ -14,38 +15,37 @@ namespace MinecraftServerStatus.IoC
             this._builder = new ContainerBuilder();
         }
 
-        public void BuildDomainServices(AppConfiguration configuration)
+        public AutofacBuilder(ContainerBuilder builder)
         {
-            RegisterAppConfiguration(configuration);
-            RegisterMongoDatabase(configuration);
-            RegisterServices(Assembly.GetExecutingAssembly());
-            RegisterControllers(Assembly.GetExecutingAssembly());
+            _builder = builder;
         }
 
-        public void BuildAdditionalServices(Assembly assembly)
+        public AutofacBuilder BuildBasicTypes(IConfiguration configuration)
+        {
+            RegisterMongoDatabase(configuration);
+            return this;
+        }
+
+        public AutofacBuilder BuildAdditionalServices(Assembly assembly)
         {
             RegisterServices(assembly);
+            return this;
         }
 
-        public void BuildAdditionalControllers(Assembly assembly)
+        public AutofacBuilder BuildAdditionalControllers(Assembly assembly)
         {
             RegisterControllers(assembly);
+            return this;
         }
 
         public IContainer GetContainer()
         {
             return _builder.Build();
         }
-        private void RegisterAppConfiguration(AppConfiguration configuration)
-        {
-            _builder.RegisterInstance(configuration)
-                .SingleInstance()
-                .As<AppConfiguration>();
-        }
 
-        private void RegisterMongoDatabase(AppConfiguration configuration)
+        private void RegisterMongoDatabase(IConfiguration configuration)
         {
-            var database = new MongoClient(configuration.MongoConnectionString).GetDatabase("hypixelCounter"); //todo: rename db
+            var database = new MongoClient(configuration["ConnectionStrings:Mongo"]).GetDatabase("hypixelCounter"); //todo: rename db
             var sessionFactory = new SessionFactory(database);
             _builder.RegisterInstance(sessionFactory)
                 .SingleInstance()
@@ -57,7 +57,8 @@ namespace MinecraftServerStatus.IoC
             _builder.RegisterAssemblyTypes(assembly)
                 .Where(x => x.Name.EndsWith("Service"))
                 .PreserveExistingDefaults()
-                .InstancePerLifetimeScope();
+                .InstancePerLifetimeScope()
+                .SingleInstance();
         }
         
         private void RegisterControllers(Assembly assembly)
@@ -65,7 +66,8 @@ namespace MinecraftServerStatus.IoC
             _builder.RegisterAssemblyTypes(assembly)
                 .Where(x => x.Name.EndsWith("Controller"))
                 .PreserveExistingDefaults()
-                .InstancePerLifetimeScope();
+                .InstancePerLifetimeScope()
+                .SingleInstance();
         }
     }
 }
