@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MinecraftServerStatusDomain.Services;
-using MinecraftServerStatusHandler.Common;
+using MinecraftServerStatus.Controller.Common;
+using MinecraftServerStatus.Domain.Services;
 
-namespace MinecraftServerStatusHandler.Controllers
+namespace MinecraftServerStatus.Controller.Controllers
 {
     public class StatisticsCounterController
     {

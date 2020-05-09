@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MinecraftServerStatusDomain.Services
+namespace MinecraftServerStatus.Domain.Services
 {
     public class ServerPlayersCounterService
     {

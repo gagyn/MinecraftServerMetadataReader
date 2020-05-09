@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using MinecraftServerStatusDomain.Integrations;
-using MinecraftServerStatusDomain.Models;
+using MinecraftServerStatus.Domain.Integrations;
+using MinecraftServerStatus.Domain.Models;
 
-namespace MinecraftServerStatusDomain.Services
+namespace MinecraftServerStatus.Domain.Services
 {
     public class StatusWriterToBaseService
     {

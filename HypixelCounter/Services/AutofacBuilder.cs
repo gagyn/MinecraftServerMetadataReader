@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using Autofac;
-using MinecraftServerStatusDomain.Integrations;
+using MinecraftServerStatus.Domain.Integrations;
 using MongoDB.Driver;
 
-namespace MinecraftServerStatusDomain.Services
+namespace MinecraftServerStatus.Domain.Services
 {
     public class AutofacBuilder
     {
@@ -14,7 +14,7 @@ namespace MinecraftServerStatusDomain.Services
             this._builder = new ContainerBuilder();
         }
 
-        public void BuildCounterServices(AppConfiguration configuration)
+        public void BuildSolutionServices(AppConfiguration configuration)
         {
             RegisterAppConfiguration(configuration);
             RegisterMongoDatabase(configuration);
@@ -45,7 +45,7 @@ namespace MinecraftServerStatusDomain.Services
 
         private void RegisterMongoDatabase(AppConfiguration configuration)
         {
-            var database = new MongoClient(configuration.MongoConnectionString).GetDatabase("hypixelCounter");
+            var database = new MongoClient(configuration.MongoConnectionString).GetDatabase("hypixelCounter"); //todo: rename db
             var sessionFactory = new SessionFactory(database);
             _builder.RegisterInstance(sessionFactory)
                 .SingleInstance()

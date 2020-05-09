@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 
-namespace MinecraftServerStatusDomain.Integrations
+namespace MinecraftServerStatus.Domain.Integrations
 {
     public class SessionFactory
     {

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using MongoDB.Driver;
 
-namespace MinecraftServerStatusDomain.Integrations
+namespace MinecraftServerStatus.Domain.Integrations
 {
     public class Session
     {

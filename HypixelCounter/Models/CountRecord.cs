@@ -1,6 +1,6 @@
-﻿using MinecraftServerStatusDomain.Integrations;
+﻿using MinecraftServerStatus.Domain.Integrations;
 
-namespace MinecraftServerStatusDomain.Models
+namespace MinecraftServerStatus.Domain.Models
 {
     public class CountRecord : Entity
     {

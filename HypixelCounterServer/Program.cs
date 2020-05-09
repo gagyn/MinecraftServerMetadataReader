@@ -1,12 +1,12 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Autofac;
-using MinecraftServerStatusDomain;
-using MinecraftServerStatusHandler.Controllers;
-using MinecraftServerStatusHandler.Services;
+using MinecraftServerStatus.Controller.Controllers;
+using MinecraftServerStatus.Controller.Services;
+using MinecraftServerStatus.Domain;
 using Newtonsoft.Json;
 
-namespace MinecraftServerStatusHandler
+namespace MinecraftServerStatus.Controller
 {
     class Program
     {
@@ -14,7 +14,7 @@ namespace MinecraftServerStatusHandler
         {
             const string configPath = "config.json";
             var configuration = JsonConvert.DeserializeObject<AppConfiguration>(File.ReadAllText(configPath));
-            var container = new AutofacServerBuilder().Build(configuration);
+            var container = new AutofacControllerBuilder().Build(configuration);
 
             var controller = container.Resolve<StatisticsCounterController>();
             await controller.Run();

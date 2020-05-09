@@ -1,22 +1,22 @@
 ﻿using System.Reflection;
 using Autofac;
-using MinecraftServerStatusDomain;
-using MinecraftServerStatusDomain.Services;
+using MinecraftServerStatus.Domain;
+using MinecraftServerStatus.Domain.Services;
 
-namespace MinecraftServerStatusHandler.Services
+namespace MinecraftServerStatus.Controller.Services
 {
-    public class AutofacServerBuilder
+    public class AutofacControllerBuilder
     {
         private readonly AutofacBuilder _builder;
 
-        public AutofacServerBuilder()
+        public AutofacControllerBuilder()
         {
             this._builder = new AutofacBuilder();
         }
 
         public IContainer Build(AppConfiguration appConfiguration)
         {
-            _builder.BuildCounterServices(appConfiguration);
+            _builder.BuildSolutionServices(appConfiguration);
             var thisAssembly = Assembly.GetExecutingAssembly();
             _builder.BuildAdditionalControllers(thisAssembly);
             _builder.BuildAdditionalServices(thisAssembly);

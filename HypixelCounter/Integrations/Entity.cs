@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MinecraftServerStatusDomain.Integrations
+namespace MinecraftServerStatus.Domain.Integrations
 {
     public class Entity
     {

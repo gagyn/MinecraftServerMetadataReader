@@ -1,4 +1,4 @@
-﻿namespace MinecraftServerStatusHandler.Common
+﻿namespace MinecraftServerStatus.Controller.Common
 {
     public enum Period
     {
