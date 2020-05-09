@@ -1,4 +1,4 @@
-﻿namespace MinecraftServerStatus.Controller.Common
+﻿namespace MinecraftServerStatus.Commons
 {
     public enum Period
     {
@@ -8,6 +8,7 @@
         Minutes15 = 15,
         Minutes10 = 10,
         Minutes5 = 5,
+        Minutes2 = 2,
         OneMinute = 1
     }
 }

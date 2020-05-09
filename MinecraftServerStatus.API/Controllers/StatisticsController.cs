@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using MinecraftServerStatus.API.Models;
-using MinecraftServerStatus.Controller.Common;
+using MinecraftServerStatus.Commons;
 using MinecraftServerStatus.Controller.Controllers;
 
 namespace MinecraftServerStatus.API.Controllers

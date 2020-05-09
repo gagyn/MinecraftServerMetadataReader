@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftServerStatus.IoC",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftServerStatus.Integrations", "MinecraftServerStatus.Integrations\MinecraftServerStatus.Integrations.csproj", "{9493C69C-5316-4822-9A29-8B6D4A6DF903}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftServerStatus.Commons", "MinecraftServerStatus.Common\MinecraftServerStatus.Commons.csproj", "{4C0FF9D8-96F7-438A-BE3C-815C7C0C63EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{9493C69C-5316-4822-9A29-8B6D4A6DF903}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9493C69C-5316-4822-9A29-8B6D4A6DF903}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9493C69C-5316-4822-9A29-8B6D4A6DF903}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C0FF9D8-96F7-438A-BE3C-815C7C0C63EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C0FF9D8-96F7-438A-BE3C-815C7C0C63EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C0FF9D8-96F7-438A-BE3C-815C7C0C63EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C0FF9D8-96F7-438A-BE3C-815C7C0C63EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

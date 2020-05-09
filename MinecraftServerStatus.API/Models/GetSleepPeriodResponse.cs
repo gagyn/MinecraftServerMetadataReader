@@ -1,4 +1,4 @@
-﻿using MinecraftServerStatus.Controller.Common;
+﻿using MinecraftServerStatus.Commons;
 
 namespace MinecraftServerStatus.API.Models
 {
