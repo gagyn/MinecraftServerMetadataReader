@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using Autofac;
-using MinecraftServerStatus.Domain.Integrations;
+using MinecraftServerStatus.Integrations.MongoDB;
 using MongoDB.Driver;
 
-namespace MinecraftServerStatus.Domain.Services
+namespace MinecraftServerStatus.IoC
 {
     public class AutofacBuilder
     {
@@ -14,7 +14,7 @@ namespace MinecraftServerStatus.Domain.Services
             this._builder = new ContainerBuilder();
         }
 
-        public void BuildSolutionServices(AppConfiguration configuration)
+        public void BuildDomainServices(AppConfiguration configuration)
         {
             RegisterAppConfiguration(configuration);
             RegisterMongoDatabase(configuration);

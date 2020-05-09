@@ -1,4 +1,4 @@
-﻿using MinecraftServerStatus.Domain.Integrations;
+﻿using MinecraftServerStatus.Integrations.MongoDB;
 
 namespace MinecraftServerStatus.Domain.Models
 {

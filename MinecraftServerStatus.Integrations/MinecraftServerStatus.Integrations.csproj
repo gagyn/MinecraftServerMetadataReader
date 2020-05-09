@@ -5,13 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="5.1.4" />
     <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MinecraftServerStatus.Integrations\MinecraftServerStatus.Integrations.csproj" />
   </ItemGroup>
 
 </Project>

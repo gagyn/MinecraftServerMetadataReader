@@ -7,6 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinecraftServerStatus.Domai
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinecraftServerStatus.Controller", "MinecraftServerStatus.Controller\MinecraftServerStatus.Controller.csproj", "{0F95F48B-17CF-4A79-8B5E-E1421BA64630}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftServerStatus.API", "MinecraftServerStatus.API\MinecraftServerStatus.API.csproj", "{780E6C25-A35B-499F-94BD-D01B13B62EC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftServerStatus.IoC", "MinecraftServerStatus.IoC\MinecraftServerStatus.IoC.csproj", "{1EE2C096-F91E-4EB7-82A5-2FED71CD4FFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftServerStatus.Integrations", "MinecraftServerStatus.Integrations\MinecraftServerStatus.Integrations.csproj", "{9493C69C-5316-4822-9A29-8B6D4A6DF903}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +27,18 @@ Global
 		{0F95F48B-17CF-4A79-8B5E-E1421BA64630}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F95F48B-17CF-4A79-8B5E-E1421BA64630}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F95F48B-17CF-4A79-8B5E-E1421BA64630}.Release|Any CPU.Build.0 = Release|Any CPU
+		{780E6C25-A35B-499F-94BD-D01B13B62EC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{780E6C25-A35B-499F-94BD-D01B13B62EC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{780E6C25-A35B-499F-94BD-D01B13B62EC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{780E6C25-A35B-499F-94BD-D01B13B62EC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EE2C096-F91E-4EB7-82A5-2FED71CD4FFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EE2C096-F91E-4EB7-82A5-2FED71CD4FFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EE2C096-F91E-4EB7-82A5-2FED71CD4FFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EE2C096-F91E-4EB7-82A5-2FED71CD4FFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9493C69C-5316-4822-9A29-8B6D4A6DF903}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9493C69C-5316-4822-9A29-8B6D4A6DF903}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9493C69C-5316-4822-9A29-8B6D4A6DF903}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9493C69C-5316-4822-9A29-8B6D4A6DF903}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

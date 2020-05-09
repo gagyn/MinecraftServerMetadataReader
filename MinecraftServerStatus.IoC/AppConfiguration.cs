@@ -1,4 +1,4 @@
-﻿namespace MinecraftServerStatus.Domain
+﻿namespace MinecraftServerStatus.IoC
 {
     public class AppConfiguration
     {

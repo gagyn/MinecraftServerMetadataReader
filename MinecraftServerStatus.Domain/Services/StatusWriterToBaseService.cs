@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using MinecraftServerStatus.Domain.Integrations;
 using MinecraftServerStatus.Domain.Models;
+using MinecraftServerStatus.Integrations.MongoDB;
 
 namespace MinecraftServerStatus.Domain.Services
 {

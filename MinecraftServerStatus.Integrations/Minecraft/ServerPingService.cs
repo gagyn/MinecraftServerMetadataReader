@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace MinecraftServerStatus.Domain.Services
+namespace MinecraftServerStatus.Integrations.Minecraft
 {
     public class ServerPing
     {

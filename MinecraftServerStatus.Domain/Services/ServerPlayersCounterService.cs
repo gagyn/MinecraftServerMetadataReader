@@ -1,4 +1,5 @@
 ﻿using System;
+using MinecraftServerStatus.Integrations.Minecraft;
 
 namespace MinecraftServerStatus.Domain.Services
 {

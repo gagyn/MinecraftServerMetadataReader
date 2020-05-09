@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MinecraftServerStatus.Domain.Integrations
+namespace MinecraftServerStatus.Integrations.MongoDB
 {
     public class Entity
     {
