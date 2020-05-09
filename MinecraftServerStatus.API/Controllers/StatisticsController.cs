@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MinecraftServerStatus.API.Models;
+using MinecraftServerStatus.Controller.Common;
 using MinecraftServerStatus.Controller.Controllers;
 
 namespace MinecraftServerStatus.API.Controllers
@@ -30,6 +29,26 @@ namespace MinecraftServerStatus.API.Controllers
             _statisticsCounterController.Stop();
         }
 
+        [HttpPost]
+        public void SetSleepPeriod([FromBody] SetSleepPeriodRequest request)
+        {
+            var minutes = request.Minutes;
+            if (!Enum.IsDefined(typeof(Period), minutes))
+            {
+                throw new ArgumentException("The value is not correct for Period");
+            }
 
+            var period = (Period)minutes;
+            _statisticsCounterController.Stop();
+            _statisticsCounterController.SleepPeriod = period;
+            _ = _statisticsCounterController.Run();
+        }
+
+        [HttpGet]
+        public GetSleepPeriodResponse GetSleepPeriod()
+        {
+            var period = _statisticsCounterController.SleepPeriod;
+            return new GetSleepPeriodResponse { SleepPeriod = period };
+        }
     }
 }
