@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HypixelCounter.Services
+namespace MinecraftServerStatusDomain.Services
 {
     public class ServerPlayersCounterService
     {

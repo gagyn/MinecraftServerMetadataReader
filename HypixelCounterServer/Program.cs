@@ -1,12 +1,12 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Autofac;
-using HypixelCounter.Services;
-using HypixelCounterServer.Controllers;
-using HypixelCounterServer.Services;
+using MinecraftServerStatusDomain;
+using MinecraftServerStatusHandler.Controllers;
+using MinecraftServerStatusHandler.Services;
 using Newtonsoft.Json;
 
-namespace HypixelCounterServer
+namespace MinecraftServerStatusHandler
 {
     class Program
     {

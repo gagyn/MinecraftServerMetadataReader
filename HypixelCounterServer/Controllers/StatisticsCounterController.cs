@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using HypixelCounter.Services;
-using HypixelCounterServer.Common;
+using MinecraftServerStatusDomain.Services;
+using MinecraftServerStatusHandler.Common;
 
-namespace HypixelCounterServer.Controllers
+namespace MinecraftServerStatusHandler.Controllers
 {
     public class StatisticsCounterController
     {

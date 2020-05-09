@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using Autofac;
-using HypixelCounter.Integrations;
+using MinecraftServerStatusDomain.Integrations;
 using MongoDB.Driver;
 
-namespace HypixelCounter.Services
+namespace MinecraftServerStatusDomain.Services
 {
     public class AutofacBuilder
     {

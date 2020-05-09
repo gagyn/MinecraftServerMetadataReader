@@ -1,4 +1,4 @@
-﻿namespace HypixelCounter.Services
+﻿namespace MinecraftServerStatusDomain
 {
     public class AppConfiguration
     {

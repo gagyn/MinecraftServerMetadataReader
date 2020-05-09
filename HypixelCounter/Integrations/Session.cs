@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using MongoDB.Driver;
 
-namespace HypixelCounter.Integrations
+namespace MinecraftServerStatusDomain.Integrations
 {
     public class Session
     {

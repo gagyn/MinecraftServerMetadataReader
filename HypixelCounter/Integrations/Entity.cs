@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HypixelCounter.Integrations
+namespace MinecraftServerStatusDomain.Integrations
 {
     public class Entity
     {

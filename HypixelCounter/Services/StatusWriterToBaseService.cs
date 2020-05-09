@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using HypixelCounter.Integrations;
-using HypixelCounter.Models;
+using MinecraftServerStatusDomain.Integrations;
+using MinecraftServerStatusDomain.Models;
 
-namespace HypixelCounter.Services
+namespace MinecraftServerStatusDomain.Services
 {
     public class StatusWriterToBaseService
     {

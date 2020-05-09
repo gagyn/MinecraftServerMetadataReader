@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 
-namespace HypixelCounter.Integrations
+namespace MinecraftServerStatusDomain.Integrations
 {
     public class SessionFactory
     {

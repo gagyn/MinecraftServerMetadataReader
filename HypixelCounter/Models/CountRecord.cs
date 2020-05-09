@@ -1,6 +1,6 @@
-﻿using HypixelCounter.Integrations;
+﻿using MinecraftServerStatusDomain.Integrations;
 
-namespace HypixelCounter.Models
+namespace MinecraftServerStatusDomain.Models
 {
     public class CountRecord : Entity
     {

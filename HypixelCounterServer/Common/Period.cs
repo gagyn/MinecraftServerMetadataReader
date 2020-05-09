@@ -1,4 +1,4 @@
-﻿namespace HypixelCounterServer.Common
+﻿namespace MinecraftServerStatusHandler.Common
 {
     public enum Period
     {

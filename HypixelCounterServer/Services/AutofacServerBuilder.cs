@@ -1,8 +1,9 @@
 ﻿using System.Reflection;
 using Autofac;
-using HypixelCounter.Services;
+using MinecraftServerStatusDomain;
+using MinecraftServerStatusDomain.Services;
 
-namespace HypixelCounterServer.Services
+namespace MinecraftServerStatusHandler.Services
 {
     public class AutofacServerBuilder
     {
