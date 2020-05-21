@@ -50,5 +50,23 @@ namespace MinecraftServerStatus.API.Controllers
             var period = _statisticsCounterController.SleepPeriod;
             return new GetSleepPeriodResponse { SleepPeriod = period };
         }
+
+        [HttpGet]
+        public GetScannedServersResponse GetScannedServers()
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        public void AddNewServer([FromBody] AddNewServerRequest request)
+        {
+            throw new NotImplementedException();
+        }
+        
+        [HttpPost]
+        public void RemoveServer([FromBody] RemoveServerRequest request)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

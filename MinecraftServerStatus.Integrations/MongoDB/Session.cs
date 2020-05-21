@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 
 namespace MinecraftServerStatus.Integrations.MongoDB
 {
-    public class Session
+    public class Session : ISession
     {
         private readonly IMongoDatabase _mongoDatabase;
 
@@ -16,6 +18,20 @@ namespace MinecraftServerStatus.Integrations.MongoDB
         public IEnumerable<T> Get<T>() where T : Entity
         {
             return this.GetCollection<T>().AsQueryable();
+        }
+
+        public async Task ReplaceAsync<T>(T item) where T : Entity
+        {
+            var possiblePreviousItems = this.Get<T>().ToList();
+            if (possiblePreviousItems.Count > 1)
+            {
+                throw new Exception("To replace there must be only one item of this type");
+            }
+            if (possiblePreviousItems.Count == 1)
+            {
+                await this.DeleteAsync(possiblePreviousItems.First());
+            }
+            await this.AddAsync(item);
         }
 
         public async Task AddAsync<T>(T item) where T : Entity

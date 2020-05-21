@@ -10,20 +10,20 @@ namespace MinecraftServerStatus.Controller.Controllers
     {
         public Period SleepPeriod
         {
-            get => _configurateSleepPeriodService.GetSleepPeriod();
-            set => _configurateSleepPeriodService.SetSleepPeriod(value).Wait();
+            get => _configureSleepPeriodService.GetSleepPeriod();
+            set => _configureSleepPeriodService.SetSleepPeriod(value).Wait();
         }
 
         private CancellationTokenSource _cancellationToken;
         private readonly StatusWriterToBaseService _statusWriterToBaseService;
         private readonly ServerPlayersCounterService _serverPlayersCounterService;
-        private readonly ConfigurateSleepPeriodService _configurateSleepPeriodService;
+        private readonly ConfigureSleepPeriodService _configureSleepPeriodService;
 
-        public StatisticsCounterController(StatusWriterToBaseService statusWriterToBaseService, ServerPlayersCounterService serverPlayersCounterService, ConfigurateSleepPeriodService configurateSleepPeriodService)
+        public StatisticsCounterController(StatusWriterToBaseService statusWriterToBaseService, ServerPlayersCounterService serverPlayersCounterService, ConfigureSleepPeriodService configureSleepPeriodService)
         {
             _statusWriterToBaseService = statusWriterToBaseService;
             _serverPlayersCounterService = serverPlayersCounterService;
-            _configurateSleepPeriodService = configurateSleepPeriodService;
+            _configureSleepPeriodService = configureSleepPeriodService;
         }
 
         public async Task Run()
@@ -43,12 +43,11 @@ namespace MinecraftServerStatus.Controller.Controllers
                 var triesLeft = 5;
                 while (triesLeft > 0)
                 {
-                    var (onlinePlayers, slots, inQueue) = GetCounts();
-                    if (onlinePlayers == 0)
+                    var success = TryToGetCounts(out var onlinePlayers, out var slots, out var inQueue);
+                    if (!success)
                     {
                         triesLeft--;
-                        var delay = 10000 * (1.0 / triesLeft);
-                        await Task.Delay((int)delay);
+                        await Task.Delay(2000);
                         continue;
                     }
 
@@ -72,6 +71,21 @@ namespace MinecraftServerStatus.Controller.Controllers
             var howManyPeriodsPassInThisHour = now.Minute / (int) sleepPeriod;
             next = next.AddMinutes((howManyPeriodsPassInThisHour + 1) * (int) sleepPeriod);
             return next - now;
+        }
+
+        private bool TryToGetCounts(out int onlinePlayers, out int slots, out int inQueue)
+        {
+            try
+            {
+                (onlinePlayers, slots, inQueue) = GetCounts();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + "\n" + e.StackTrace);
+                (onlinePlayers, slots, inQueue) = (-1, -1, -1);
+                return false;
+            }
         }
 
         private (int onlinePlayers, int slots, int inQueue) GetCounts()

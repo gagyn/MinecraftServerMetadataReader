@@ -33,7 +33,7 @@ namespace MinecraftServerStatus.API
         private static void ConfigureAutofac(ContainerBuilder builder)
         {
             var configuration = GetConfiguration();
-            var assemblies = new AssembliesFinder().GetAllReferencedAssemblies(Assembly.GetEntryAssembly(), "MinecraftServerStatus");
+            var assemblies = new AssembliesFinder().GetAllReferencedAssemblies(Assembly.GetEntryAssembly(), nameof(MinecraftServerStatus));
             var solutionAutofacBuilder = new AutofacBuilder(builder).BuildBasicTypes(configuration);
             assemblies.ForEach(x =>
             {

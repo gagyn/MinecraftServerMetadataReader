@@ -11,7 +11,7 @@ namespace MinecraftServerStatus.Integrations.MongoDB
             _mongoDatabase = mongoDatabase;
         }
 
-        public Session Create()
+        public ISession Create()
         {
             return new Session(_mongoDatabase);
         }
