@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MinecraftServerStatus.Commons;
+using MinecraftServerStatus.Domain.Models;
 using MinecraftServerStatus.Domain.Services;
 
 namespace MinecraftServerStatus.Controller.Controllers
@@ -10,21 +13,27 @@ namespace MinecraftServerStatus.Controller.Controllers
     {
         public Period SleepPeriod
         {
-            get => _configureSleepPeriodService.GetSleepPeriod();
-            set => _configureSleepPeriodService.SetSleepPeriod(value).Wait();
+            get => _configureSettingsService.GetSleepPeriod();
+            set => _configureSettingsService.SetSleepPeriod(value).Wait();
         }
 
         private CancellationTokenSource _cancellationToken;
-        private readonly StatusWriterToBaseService _statusWriterToBaseService;
-        private readonly ServerPlayersCounterService _serverPlayersCounterService;
-        private readonly ConfigureSleepPeriodService _configureSleepPeriodService;
+        private readonly StatusSaverService _statusSaverService;
+        private readonly PlayersCounterService _playersCounterService;
+        private readonly ConfigureSettingsService _configureSettingsService;
+        private readonly List<string> _serverAddresses;
 
-        public StatisticsCounterController(StatusWriterToBaseService statusWriterToBaseService, ServerPlayersCounterService serverPlayersCounterService, ConfigureSleepPeriodService configureSleepPeriodService)
+        public StatisticsCounterController(StatusSaverService statusSaverService, PlayersCounterService playersCounterService, ConfigureSettingsService configureSettingsService)
         {
-            _statusWriterToBaseService = statusWriterToBaseService;
-            _serverPlayersCounterService = serverPlayersCounterService;
-            _configureSleepPeriodService = configureSleepPeriodService;
+            _statusSaverService = statusSaverService;
+            _playersCounterService = playersCounterService;
+            _configureSettingsService = configureSettingsService;
+            _serverAddresses = new List<string>();
         }
+
+        public void AddServer(string serverAddress) => _serverAddresses.Add(serverAddress);
+        public void RemoveServer(string serverAddress) => _serverAddresses.Remove(serverAddress);
+        public IList<string> GetServers => _serverAddresses;
 
         public async Task Run()
         {
@@ -33,29 +42,8 @@ namespace MinecraftServerStatus.Controller.Controllers
             {
                 return;
             }
-
             _cancellationToken = new CancellationTokenSource();
-            while (!_cancellationToken.IsCancellationRequested)
-            {
-                var sleepTime = GetSleepTime(SleepPeriod);
-                await Task.Delay(sleepTime, _cancellationToken.Token);
-
-                var triesLeft = 5;
-                while (triesLeft > 0)
-                {
-                    var success = TryToGetCounts(out var onlinePlayers, out var slots, out var inQueue);
-                    if (!success)
-                    {
-                        triesLeft--;
-                        await Task.Delay(2000);
-                        continue;
-                    }
-
-                    await _statusWriterToBaseService.WriteToBase(onlinePlayers, inQueue, slots);
-                    Console.WriteLine($"{DateTime.Now}: {onlinePlayers} in queue: {inQueue} slots: {slots}");
-                    break;
-                }
-            }
+            await RunUntilCanceledAsync();
         }
 
         public void Stop()
@@ -63,40 +51,37 @@ namespace MinecraftServerStatus.Controller.Controllers
             _cancellationToken?.Cancel();
         }
 
+        private async Task RunUntilCanceledAsync()
+        {
+            while (!_cancellationToken.IsCancellationRequested)
+            {
+                var sleepTime = GetSleepTime(SleepPeriod);
+                await Task.Delay(sleepTime, _cancellationToken.Token);
+
+                var countRecords = GetCountRecords();
+                countRecords.ToList().ForEach(async x => await _statusSaverService.Write(x));
+                Console.WriteLine($"Wrote at {DateTime.Now}");
+            }
+        }
+
+        private IEnumerable<CountRecord> GetCountRecords()
+        {
+            var countRecords = _serverAddresses.Select(x =>
+            {
+                var isSuccess = _playersCounterService.TryToGetCounts(x, out var record);
+                return (isSuccess, record);
+            });
+            return countRecords.Where(x => x.isSuccess).Select(x => x.record);
+        }
+
         private TimeSpan GetSleepTime(Period sleepPeriod)
         {
             var now = DateTime.Now;
             var next = now.Date;
             next = next.AddHours(now.Hour);
-            var howManyPeriodsPassInThisHour = now.Minute / (int) sleepPeriod;
-            next = next.AddMinutes((howManyPeriodsPassInThisHour + 1) * (int) sleepPeriod);
+            var howManyPeriodsPassInThisHour = now.Minute / (int)sleepPeriod;
+            next = next.AddMinutes((howManyPeriodsPassInThisHour + 1) * (int)sleepPeriod);
             return next - now;
-        }
-
-        private bool TryToGetCounts(out int onlinePlayers, out int slots, out int inQueue)
-        {
-            try
-            {
-                (onlinePlayers, slots, inQueue) = GetCounts();
-                return true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message + "\n" + e.StackTrace);
-                (onlinePlayers, slots, inQueue) = (-1, -1, -1);
-                return false;
-            }
-        }
-
-        private (int onlinePlayers, int slots, int inQueue) GetCounts()
-        {
-            var (onlinePlayers, slots) = _serverPlayersCounterService.GetRealCount();
-            var inQueue = onlinePlayers - slots;
-            if (inQueue < 0)
-            {
-                inQueue = 0;
-            }
-            return (onlinePlayers, slots, inQueue);
         }
     }
 }

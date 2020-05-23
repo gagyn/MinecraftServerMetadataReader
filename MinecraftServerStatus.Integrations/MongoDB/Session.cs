@@ -20,7 +20,7 @@ namespace MinecraftServerStatus.Integrations.MongoDB
             return this.GetCollection<T>().AsQueryable();
         }
 
-        public async Task ReplaceAsync<T>(T item) where T : Entity
+        public async Task ReplaceByTypeAsync<T>(T item) where T : Entity
         {
             var possiblePreviousItems = this.Get<T>().ToList();
             if (possiblePreviousItems.Count > 1)
@@ -32,6 +32,17 @@ namespace MinecraftServerStatus.Integrations.MongoDB
                 await this.DeleteAsync(possiblePreviousItems.First());
             }
             await this.AddAsync(item);
+        }
+
+        public async Task ReplaceAsync<T>(T oldItem, T newItem) where T : Entity
+        {
+            await this.DeleteAsync(oldItem);
+            await this.AddAsync(newItem);
+        }
+
+        public async Task UpdateAsync<T>(T item) where T : Entity
+        {
+            await this.GetCollection<T>().ReplaceOneAsync(x => x.Id == item.Id, item);
         }
 
         public async Task AddAsync<T>(T item) where T : Entity

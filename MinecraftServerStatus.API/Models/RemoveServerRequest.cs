@@ -2,6 +2,6 @@
 {
     public class RemoveServerRequest
     {
-        public string ServerName { get; set; }
+        public string ServerAddress { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MinecraftServerStatus.Integrations.MongoDB
@@ -9,6 +10,8 @@ namespace MinecraftServerStatus.Integrations.MongoDB
         Task AddAsync<T>(T item) where T : Entity;
         Task DeleteAsync<T>(T item) where T : Entity;
         IEnumerable<T> Get<T>() where T : Entity;
-        Task ReplaceAsync<T>(T item) where T : Entity;
+        Task ReplaceByTypeAsync<T>(T item) where T : Entity;
+        Task ReplaceAsync<T>(T oldItem, T newItem) where T : Entity;
+        Task UpdateAsync<T>(T item) where T : Entity;
     }
 }

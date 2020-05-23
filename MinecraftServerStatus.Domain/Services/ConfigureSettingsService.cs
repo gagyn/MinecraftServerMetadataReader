@@ -6,12 +6,12 @@ using MinecraftServerStatus.Integrations.MongoDB;
 
 namespace MinecraftServerStatus.Domain.Services
 {
-    public class ConfigureSleepPeriodService
+    public class ConfigureSettingsService
     {
         private const Period DEFAULT_PERIOD = Period.Minutes15;
         private readonly SessionFactory _sessionFactory;
 
-        public ConfigureSleepPeriodService(SessionFactory sessionFactory)
+        public ConfigureSettingsService(SessionFactory sessionFactory)
         {
             _sessionFactory = sessionFactory;
         }
@@ -26,7 +26,7 @@ namespace MinecraftServerStatus.Domain.Services
         public async Task SetSleepPeriod(Period period)
         {
             var session = _sessionFactory.Create();
-            await session.ReplaceAsync(new SleepPeriod(period));
+            await session.ReplaceByTypeAsync(new SleepPeriod(period));
         }
     }
 }

@@ -27,7 +27,8 @@ namespace MinecraftServerStatus.API
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory(ConfigureAutofac))
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                        .UseUrls("https://192.168.0.100:5001");
                 });
 
         private static void ConfigureAutofac(ContainerBuilder builder)
@@ -46,7 +47,7 @@ namespace MinecraftServerStatus.API
         {
         var builder = new ConfigurationBuilder()
 #if RELEASE
-                .AddJsonFile("appsettings.Production.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
 #else
                 .AddJsonFile("appsettings.Development.json", optional: true)
 #endif

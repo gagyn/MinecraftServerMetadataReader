@@ -4,6 +4,6 @@ namespace MinecraftServerStatus.API.Models
 {
     public class GetScannedServersResponse
     {
-        public IEnumerable<string> ServerNames { get; set; }
+        public IEnumerable<string> ServersAddresses { get; set; }
     }
 }
