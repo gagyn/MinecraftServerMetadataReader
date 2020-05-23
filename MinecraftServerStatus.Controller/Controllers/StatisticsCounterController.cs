@@ -37,11 +37,11 @@ namespace MinecraftServerStatus.Controller.Controllers
         public async Task AddServer(string serverAddress) => await _scannedServersService.AddServer(serverAddress);
         public async Task RemoveServer(string serverAddress) => await _scannedServersService.RemoveServerAsync(serverAddress);
         public IList<string> GetServers() => _scannedServersService.Servers;
+        public bool IsNowRunning() => _cancellationToken != null && !_cancellationToken.IsCancellationRequested;
 
         public async Task Run()
         {
-            var isNowRunning = _cancellationToken != null && !_cancellationToken.IsCancellationRequested;
-            if (isNowRunning)
+            if (IsNowRunning())
             {
                 return;
             }

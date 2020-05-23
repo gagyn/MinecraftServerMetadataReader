@@ -66,13 +66,18 @@ namespace MinecraftServerStatus.API.Controllers
         {
             await _statisticsCounterController.AddServer(request.ServerAddress);
         }
-        
+
         [HttpPost]
         public async Task RemoveServer([FromBody] RemoveServerRequest request)
         {
             await _statisticsCounterController.RemoveServer(request.ServerAddress);
         }
 
-        
+        [HttpGet]
+        public GetIsNowRunningResponse GetIsNowRunning()
+        {
+            var isRunning = _statisticsCounterController.IsNowRunning();
+            return new GetIsNowRunningResponse { IsNowRunning = isRunning };
+        }
     }
 }
