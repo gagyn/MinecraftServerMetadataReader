@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MinecraftServerStatus.API.Models;
 using MinecraftServerStatus.Commons;
@@ -26,11 +27,11 @@ namespace MinecraftServerStatus.API.Controllers
         [HttpGet]
         public void StopSavingCounts()
         {
-            _statisticsCounterController.Stop();
+            _ = _statisticsCounterController.Stop();
         }
 
         [HttpPost]
-        public void SetSleepPeriod([FromBody] SetSleepPeriodRequest request)
+        public async Task SetSleepPeriod([FromBody] SetSleepPeriodRequest request)
         {
             var minutes = request.Minutes;
             if (!Enum.IsDefined(typeof(Period), minutes))
@@ -39,9 +40,9 @@ namespace MinecraftServerStatus.API.Controllers
             }
 
             var period = (Period)minutes;
-            _statisticsCounterController.Stop();
+            await _statisticsCounterController.Stop();
             _statisticsCounterController.SleepPeriod = period;
-            _ = _statisticsCounterController.Run();
+            await _statisticsCounterController.Run();
         }
 
         [HttpGet]
@@ -54,19 +55,24 @@ namespace MinecraftServerStatus.API.Controllers
         [HttpGet]
         public GetScannedServersResponse GetScannedServers()
         {
-            throw new NotImplementedException();
+            return new GetScannedServersResponse
+            {
+                ServersAddresses = _statisticsCounterController.GetServers()
+            };
         }
 
         [HttpPost]
-        public void AddNewServer([FromBody] AddNewServerRequest request)
+        public async Task AddNewServerAsync([FromBody] AddNewServerRequest request)
         {
-            throw new NotImplementedException();
+            await _statisticsCounterController.AddServer(request.ServerAddress);
         }
         
         [HttpPost]
-        public void RemoveServer([FromBody] RemoveServerRequest request)
+        public async Task RemoveServer([FromBody] RemoveServerRequest request)
         {
-            throw new NotImplementedException();
+            await _statisticsCounterController.RemoveServer(request.ServerAddress);
         }
+
+        
     }
 }

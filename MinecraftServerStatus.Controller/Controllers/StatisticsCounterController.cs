@@ -21,19 +21,22 @@ namespace MinecraftServerStatus.Controller.Controllers
         private readonly StatusSaverService _statusSaverService;
         private readonly PlayersCounterService _playersCounterService;
         private readonly ConfigureSettingsService _configureSettingsService;
-        private readonly List<string> _serverAddresses;
+        private readonly ScannedServersService _scannedServersService;
 
-        public StatisticsCounterController(StatusSaverService statusSaverService, PlayersCounterService playersCounterService, ConfigureSettingsService configureSettingsService)
+        public StatisticsCounterController(StatusSaverService statusSaverService, PlayersCounterService playersCounterService, ConfigureSettingsService configureSettingsService, ScannedServersService scannedServersService)
         {
             _statusSaverService = statusSaverService;
             _playersCounterService = playersCounterService;
             _configureSettingsService = configureSettingsService;
-            _serverAddresses = new List<string>();
+            _scannedServersService = scannedServersService;
+
+            configureSettingsService.InitSettings().Wait();
         }
 
-        public void AddServer(string serverAddress) => _serverAddresses.Add(serverAddress);
-        public void RemoveServer(string serverAddress) => _serverAddresses.Remove(serverAddress);
-        public IList<string> GetServers => _serverAddresses;
+        public bool ShouldStartAsRunning() => _configureSettingsService.ShouldStartAsRunning();
+        public async Task AddServer(string serverAddress) => await _scannedServersService.AddServer(serverAddress);
+        public async Task RemoveServer(string serverAddress) => await _scannedServersService.RemoveServerAsync(serverAddress);
+        public IList<string> GetServers() => _scannedServersService.Servers;
 
         public async Task Run()
         {
@@ -43,11 +46,13 @@ namespace MinecraftServerStatus.Controller.Controllers
                 return;
             }
             _cancellationToken = new CancellationTokenSource();
-            await RunUntilCanceledAsync();
+            await _configureSettingsService.SetAsRunning();
+            _ = RunUntilCanceledAsync();
         }
 
-        public void Stop()
+        public async Task Stop()
         {
+            await _configureSettingsService.SetAsStopped();
             _cancellationToken?.Cancel();
         }
 
@@ -66,7 +71,7 @@ namespace MinecraftServerStatus.Controller.Controllers
 
         private IEnumerable<CountRecord> GetCountRecords()
         {
-            var countRecords = _serverAddresses.Select(x =>
+            var countRecords = _scannedServersService.Servers.Select(x =>
             {
                 var isSuccess = _playersCounterService.TryToGetCounts(x, out var record);
                 return (isSuccess, record);

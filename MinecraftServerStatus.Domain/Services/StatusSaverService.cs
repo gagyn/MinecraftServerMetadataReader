@@ -19,7 +19,8 @@ namespace MinecraftServerStatus.Domain.Services
             {
                 OnlinePlayers = onlinePlayers,
                 InQueuePlayers = inQueue,
-                MaxSlots = slots
+                MaxSlots = slots,
+                ServerAddress = serverAddress
             };
             await Write(countRecord);
         }

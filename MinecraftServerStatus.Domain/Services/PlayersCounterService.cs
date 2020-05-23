@@ -7,8 +7,6 @@ namespace MinecraftServerStatus.Domain.Services
 {
     public class PlayersCounterService
     {
-        private const string _HYPIXEL_IP = "mc.hypixel.net"; // todo: 
-
         public bool TryToGetCounts(string serverAddress, out CountRecord? countRecord)
         {
             var triesLeft = 5;

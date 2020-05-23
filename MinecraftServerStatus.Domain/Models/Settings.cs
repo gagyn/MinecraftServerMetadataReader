@@ -1,18 +1,17 @@
-﻿using System.Collections.Generic;
-using MinecraftServerStatus.Commons;
+﻿using MinecraftServerStatus.Commons;
+using MinecraftServerStatus.Integrations.MongoDB;
 
 namespace MinecraftServerStatus.Domain.Models
 {
-    public class Settings
+    public class Settings : Entity
     {
         public Period SleepPeriod { get; private set; }
-        public IEnumerable<string> ServersAddresses { get; private set; }
         public bool IsRunning { get; private set; }
 
-        public Settings(Period sleepPeriod, IEnumerable<string> serversAddresses)
+        public Settings(Period sleepPeriod, bool isRunning)
         {
             SleepPeriod = sleepPeriod;
-            ServersAddresses = serversAddresses;
+            IsRunning = isRunning;
         }
     }
 }

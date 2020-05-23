@@ -1,25 +1,30 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using MinecraftServerStatus.Controller.Controllers;
 using MinecraftServerStatus.IoC;
-using Newtonsoft.Json;
 
 namespace MinecraftServerStatus.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var webHost = CreateHostBuilder(args).Build();
+            using (var scope = webHost.Services.CreateScope())
+            {
+                var controller = scope.ServiceProvider.GetRequiredService<StatisticsCounterController>();
+                if (controller.ShouldStartAsRunning())
+                {
+                    await controller.Run();
+                }
+            }
+            await webHost.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
