@@ -45,7 +45,7 @@ namespace MinecraftServerStatus.IoC
 
         private void RegisterMongoDatabase(IConfiguration configuration)
         {
-            var database = new MongoClient(configuration["ConnectionStrings:Mongo"]).GetDatabase("hypixelCounter"); //todo: rename db
+            var database = new MongoClient(configuration["ConnectionStrings:Mongo"]).GetDatabase("McServersCounter"); //todo: rename db
             var sessionFactory = new SessionFactory(database);
             _builder.RegisterInstance(sessionFactory)
                 .SingleInstance()
