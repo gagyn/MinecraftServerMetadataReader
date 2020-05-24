@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MinecraftServerStatus.Commons;
 using MinecraftServerStatus.Domain.Models;
 using MinecraftServerStatus.Domain.Services;
+using MongoDB.Driver;
 
 namespace MinecraftServerStatus.Controller.Controllers
 {
@@ -17,7 +18,7 @@ namespace MinecraftServerStatus.Controller.Controllers
             set => _configureSettingsService.SetSleepPeriod(value).Wait();
         }
 
-        private CancellationTokenSource _cancellationToken;
+        private CancellationTokenSource _cancellationTokenSource;
         private readonly StatusSaverService _statusSaverService;
         private readonly PlayersCounterService _playersCounterService;
         private readonly ConfigureSettingsService _configureSettingsService;
@@ -29,7 +30,8 @@ namespace MinecraftServerStatus.Controller.Controllers
             _playersCounterService = playersCounterService;
             _configureSettingsService = configureSettingsService;
             _scannedServersService = scannedServersService;
-
+            _cancellationTokenSource = new CancellationTokenSource();
+            _cancellationTokenSource.Cancel();
             configureSettingsService.InitSettings().Wait();
         }
 
@@ -37,7 +39,7 @@ namespace MinecraftServerStatus.Controller.Controllers
         public async Task AddServer(string serverAddress) => await _scannedServersService.AddServer(serverAddress);
         public async Task RemoveServer(string serverAddress) => await _scannedServersService.RemoveServerAsync(serverAddress);
         public IList<string> GetServers() => _scannedServersService.Servers;
-        public bool IsNowRunning() => _cancellationToken != null && !_cancellationToken.IsCancellationRequested;
+        public bool IsNowRunning() => !_cancellationTokenSource.IsCancellationRequested;
 
         public async Task Run()
         {
@@ -45,7 +47,7 @@ namespace MinecraftServerStatus.Controller.Controllers
             {
                 return;
             }
-            _cancellationToken = new CancellationTokenSource();
+            _cancellationTokenSource = new CancellationTokenSource();
             await _configureSettingsService.SetAsRunning();
             _ = RunUntilCanceledAsync();
         }
@@ -53,30 +55,39 @@ namespace MinecraftServerStatus.Controller.Controllers
         public async Task Stop()
         {
             await _configureSettingsService.SetAsStopped();
-            _cancellationToken?.Cancel();
+            _cancellationTokenSource.Cancel();
         }
 
         private async Task RunUntilCanceledAsync()
         {
-            while (!_cancellationToken.IsCancellationRequested)
+            while (_cancellationTokenSource!.IsCancellationRequested == false)
             {
                 var sleepTime = GetSleepTime(SleepPeriod);
-                await Task.Delay(sleepTime, _cancellationToken.Token);
+                await Task.Delay(sleepTime, _cancellationTokenSource.Token);
 
                 var countRecords = GetCountRecords();
-                countRecords.ToList().ForEach(async x => await _statusSaverService.Write(x));
+                await countRecords.ForEachAsync(async x => await _statusSaverService.Write(x));
                 Console.WriteLine($"Wrote at {DateTime.Now}");
             }
         }
 
-        private IEnumerable<CountRecord> GetCountRecords()
+        private async IAsyncEnumerable<CountRecord?> GetCountRecords()
         {
-            var countRecords = _scannedServersService.Servers.Select(x =>
+            var tasks = _scannedServersService.Servers
+                .Select(x => _playersCounterService.TryToGetCountRecord(x))
+                .ToList();
+
+            while (tasks.Count > 0)
             {
-                var isSuccess = _playersCounterService.TryToGetCounts(x, out var record);
-                return (isSuccess, record);
-            });
-            return countRecords.Where(x => x.isSuccess).Select(x => x.record);
+                var firstFinished = await Task.WhenAny(tasks);
+                tasks.Remove(firstFinished);
+
+                var countRecord = await firstFinished;
+                if (countRecord != null)
+                {
+                    yield return countRecord;
+                }
+            }
         }
 
         private TimeSpan GetSleepTime(Period sleepPeriod)

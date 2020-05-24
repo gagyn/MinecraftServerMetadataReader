@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MinecraftServerStatus.Domain.Models;
 using MinecraftServerStatus.Integrations.MongoDB;
@@ -14,7 +15,8 @@ namespace MinecraftServerStatus.Domain.Services
         public ScannedServersService(SessionFactory sessionFactory)
         {
             _sessionFactory = sessionFactory;
-            _serverAddresses = new List<string>();
+            var session = sessionFactory.Create();
+            _serverAddresses = session.Get<Server>().Select(x => x.Address).ToList();
         }
 
         public async Task AddServer(string serverAddress)

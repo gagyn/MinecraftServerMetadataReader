@@ -7,30 +7,29 @@ namespace MinecraftServerStatus.Domain.Services
 {
     public class PlayersCounterService
     {
-        public bool TryToGetCounts(string serverAddress, out CountRecord? countRecord)
+        public async Task<CountRecord?> TryToGetCountRecord(string serverAddress)
         {
             var triesLeft = 5;
             while (triesLeft > 0)
             {
                 try
                 {
-                    countRecord = GetCounts(serverAddress);
-                    return true;
+                    var countRecord = await GetCounts(serverAddress);
+                    return countRecord;
                 }
                 catch (Exception e)
                 {
                     triesLeft--;
                     Console.WriteLine(e.Message + "\n" + e.StackTrace);
-                    Task.Delay(3000).Wait();
+                    await Task.Delay(3000);
                 }
             }
-            countRecord = null;
-            return false;
+            return null;
         }
 
-        public CountRecord GetCounts(string serverAddress)
+        public async Task<CountRecord> GetCounts(string serverAddress)
         {
-            var (onlinePlayers, slots) = GetRealCount(serverAddress);
+            var (onlinePlayers, slots) = await GetRealCount(serverAddress);
             var inQueue = onlinePlayers - slots;
             if (inQueue < 0)
             {
@@ -46,10 +45,10 @@ namespace MinecraftServerStatus.Domain.Services
             };
         }
 
-        private (int onlinePlayers, int slots) GetRealCount(string serverAddress)
+        private async Task<(int onlinePlayers, int slots)> GetRealCount(string serverAddress)
         {
             var serverPing = new ServerPing();
-            var pingPayLoad = serverPing.GetPingPayloadAsync(serverAddress).Result; // possible throw exception if connection error
+            var pingPayLoad = await serverPing.GetPingPayloadAsync(serverAddress); // possible throw exception if connection error
             return (pingPayLoad.Players.Online, pingPayLoad.Players.Max);
         }
     }
