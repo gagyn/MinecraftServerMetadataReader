@@ -71,7 +71,7 @@ namespace MinecraftServerStatus.Controller.Controllers
             }
         }
 
-        private async IAsyncEnumerable<CountRecord?> GetCountRecords()
+        private async IAsyncEnumerable<CountRecord> GetCountRecords()
         {
             var tasks = _scannedServersService.Servers
                 .Select(x => _playersCounterService.TryToGetCountRecord(x))
