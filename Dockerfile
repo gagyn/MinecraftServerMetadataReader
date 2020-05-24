@@ -12,7 +12,7 @@ COPY . ./
 RUN dotnet build MinecraftServerStatus.API/MinecraftServerStatus.API.csproj
 
 RUN dotnet publish MinecraftServerStatus.API/MinecraftServerStatus.API.csproj -c Release -o out
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1-buster-slim-arm32v7
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim-arm32v7
 WORKDIR /app
 COPY --from=build /app/out .
 ENTRYPOINT ["dotnet", "MinecraftServerStatus.API.dll"]
