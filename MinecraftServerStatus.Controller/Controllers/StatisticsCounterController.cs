@@ -36,8 +36,8 @@ namespace MinecraftServerStatus.Controller.Controllers
         }
 
         public bool ShouldStartAsRunning() => _configureSettingsService.ShouldStartAsRunning();
-        public async Task AddServer(string serverAddress) => await _scannedServersService.AddServer(serverAddress);
-        public async Task RemoveServer(string serverAddress) => await _scannedServersService.RemoveServerAsync(serverAddress);
+        public async Task AddServer(string serverAddress) => await _scannedServersService.AddServer(serverAddress.Trim());
+        public async Task RemoveServer(string serverAddress) => await _scannedServersService.RemoveServerAsync(serverAddress.Trim());
         public IList<string> GetServers() => _scannedServersService.Servers;
         public bool IsNowRunning() => !_cancellationTokenSource.IsCancellationRequested;
 
