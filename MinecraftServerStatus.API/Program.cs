@@ -13,6 +13,13 @@ namespace MinecraftServerStatus.API
 {
     public class Program
     {
+        private static readonly IConfiguration _configuration;
+
+        static Program()
+        {
+            _configuration = GetConfiguration();
+        }
+
         public static async Task Main(string[] args)
         {
             var webHost = CreateHostBuilder(args).Build();
@@ -33,14 +40,13 @@ namespace MinecraftServerStatus.API
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>()
-                        .UseUrls("https://192.168.0.100:5001");
+                        .UseUrls(_configuration["Url"]);
                 });
 
         private static void ConfigureAutofac(ContainerBuilder builder)
         {
-            var configuration = GetConfiguration();
             var assemblies = new AssembliesFinder().GetAllReferencedAssemblies(Assembly.GetEntryAssembly(), nameof(MinecraftServerStatus));
-            var solutionAutofacBuilder = new AutofacBuilder(builder).BuildBasicTypes(configuration);
+            var solutionAutofacBuilder = new AutofacBuilder(builder).BuildBasicTypes(_configuration);
             assemblies.ForEach(x =>
             {
                 solutionAutofacBuilder
@@ -48,9 +54,10 @@ namespace MinecraftServerStatus.API
                     .BuildAdditionalServices(x);
             });
         }
+
         private static IConfiguration GetConfiguration()
         {
-        var builder = new ConfigurationBuilder()
+            var builder = new ConfigurationBuilder()
 #if RELEASE
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
 #else
