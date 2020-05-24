@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftServerStatus.IoC",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftServerStatus.Integrations", "MinecraftServerStatus.Integrations\MinecraftServerStatus.Integrations.csproj", "{9493C69C-5316-4822-9A29-8B6D4A6DF903}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftServerStatus.Commons", "MinecraftServerStatus.Common\MinecraftServerStatus.Commons.csproj", "{4C0FF9D8-96F7-438A-BE3C-815C7C0C63EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftServerStatus.Commons", "MinecraftServerStatus.Commons\MinecraftServerStatus.Commons.csproj", "{4C0FF9D8-96F7-438A-BE3C-815C7C0C63EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

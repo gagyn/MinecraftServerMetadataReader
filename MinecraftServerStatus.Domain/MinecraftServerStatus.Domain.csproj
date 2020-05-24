@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MinecraftServerStatus.Common\MinecraftServerStatus.Commons.csproj" />
+    <ProjectReference Include="..\MinecraftServerStatus.Commons\MinecraftServerStatus.Commons.csproj" />
     <ProjectReference Include="..\MinecraftServerStatus.Integrations\MinecraftServerStatus.Integrations.csproj" />
   </ItemGroup>
 
